@@ -1,0 +1,60 @@
+#!/bin/sh
+
+# the path of curl and c_ares
+SOURCE=/home/android
+# the path of android ndk
+ANDROID_NDK="/home/android/android-ndk-r8b"
+
+# toolchain version, change them if necessary
+# android-ndk r8b supports 4.4.3 and 4.6
+TOOLCHAIN_VERSION="4.4.3"
+# platform version, i.e. api level
+PLATFORM_VERSION=8
+# target
+TARGET=arm-linux-androideabi
+# path
+PATH=$ANDROID_NDK/toolchains/$TARGET-$TOOLCHAIN_VERSION/prebuilt/linux-x86/bin:$PATH
+# the fullpath of libgcc.a
+LIBGCCA=`ls $ANDROID_NDK/toolchains/$TARGET-$TOOLCHAIN_VERSION/prebuilt/linux-x86/lib/gcc/$TARGET/*/thumb/libgcc.a`
+
+# the path of openssl
+OPENSSL_PREFIX=/home/android/external/openssl
+# the path of libcrypto.so libssl.so, can get it from /system/lib
+OPENSSL_LIBDIR=/home/android/out/target/product/generic/system/lib
+# the version of curl and c_ares
+CURL_VERSION=7.27.0
+C_ARES_VERSION=1.9.1
+CURL_EXTRA="--disable-ftp --disable-file --disable-ldap --disable-ldaps --disable-rtsp --disable-proxy --disable-dict --disable-telnet --disable-tftp --disable-pop3 --disable-imap --disable-smtp --disable-gopher --disable-sspi"
+
+cd `dirname $0`
+
+rm -rf curl curl-$CURL_VERSION
+tar xf $SOURCE/curl-$CURL_VERSION.tar.*
+mv curl-$CURL_VERSION curl
+mkdir -p curl/ares
+
+rm -rf ares c-ares-$C_ARES_VERSION
+tar xf $SOURCE/c-ares-$C_ARES_VERSION.tar.*
+mv c-ares-$C_ARES_VERSION ares
+
+cd curl
+./configure CC=$TARGET-gcc --host=arm-linux \
+	CPPFLAGS="-DANDROID -I$ANDROID_NDK/platforms/android-$PLATFORM_VERSION/arch-arm/usr/include " \
+	CFLAGS="-fno-exceptions -Wno-multichar -mthumb-interwork -mthumb -nostdlib " \
+	LIBS="-lc -ldl -lz $LIBGCCA " \
+	LDFLAGS="-L$ANDROID_NDK/platforms/android-$PLATFORM_VERSION/arch-arm/usr/lib -L$OPENSSL_LIBDIR " \
+	--enable-ipv6 --disable-manual --with-random=/dev/urandom \
+	--with-ssl=$OPENSSL_PREFIX --without-ca-bundle --without-ca-path \
+	--with-zlib --enable-ares $CURL_EXTRA || exit 1
+cd ..
+
+cd ares
+./configure CC=$TARGET-gcc --host=arm-linux \
+	CPPFLAGS="-DANDROID -I$ANDROID_NDK/platforms/android-$PLATFORM_VERSION/arch-arm/usr/include " \
+	CFLAGS="-fno-exceptions -Wno-multichar -mthumb-interwork -mthumb -nostdlib " \
+	LIBS="-lc -ldl " \
+	LDFLAGS="-L$ANDROID_NDK/platforms/android-$PLATFORM_VERSION/arch-arm/usr/lib " \
+	--with-random=/dev/urandom || exit 1
+cd ..
+
+cd ..
