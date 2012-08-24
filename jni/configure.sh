@@ -26,7 +26,7 @@ CURL_VERSION=7.27.0
 C_ARES_VERSION=1.9.1
 CURL_EXTRA="--disable-ftp --disable-file --disable-ldap --disable-ldaps --disable-rtsp --disable-proxy --disable-dict --disable-telnet --disable-tftp --disable-pop3 --disable-imap --disable-smtp --disable-gopher --disable-sspi"
 
-cd `dirname $0`
+pushd `dirname $0`
 
 rm -rf curl curl-$CURL_VERSION
 tar xf $SOURCE/curl-$CURL_VERSION.tar.*
@@ -37,7 +37,7 @@ rm -rf ares c-ares-$C_ARES_VERSION
 tar xf $SOURCE/c-ares-$C_ARES_VERSION.tar.*
 mv c-ares-$C_ARES_VERSION ares
 
-cd curl
+pushd curl
 ./configure CC=$TARGET-gcc --host=arm-linux \
 	CPPFLAGS="-DANDROID -I$ANDROID_NDK/platforms/android-$PLATFORM_VERSION/arch-arm/usr/include " \
 	CFLAGS="-fno-exceptions -Wno-multichar -mthumb-interwork -mthumb -nostdlib " \
@@ -46,15 +46,15 @@ cd curl
 	--enable-ipv6 --disable-manual --with-random=/dev/urandom \
 	--with-ssl=$OPENSSL_PREFIX --without-ca-bundle --without-ca-path \
 	--with-zlib --enable-ares $CURL_EXTRA || exit 1
-cd ..
+popd
 
-cd ares
+pushd ares
 ./configure CC=$TARGET-gcc --host=arm-linux \
 	CPPFLAGS="-DANDROID -I$ANDROID_NDK/platforms/android-$PLATFORM_VERSION/arch-arm/usr/include " \
 	CFLAGS="-fno-exceptions -Wno-multichar -mthumb-interwork -mthumb -nostdlib " \
 	LIBS="-lc -ldl " \
 	LDFLAGS="-L$ANDROID_NDK/platforms/android-$PLATFORM_VERSION/arch-arm/usr/lib " \
 	--with-random=/dev/urandom || exit 1
-cd ..
+popd
 
-cd ..
+popd
