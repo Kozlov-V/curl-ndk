@@ -18,6 +18,7 @@ import android.os.Bundle;
 import android.widget.TextView;
 import android.util.Log;
 import me.cutemay.curl.Curl;
+import me.cutemay.curl.Ping;
 
 import java.util.ArrayList;
 
@@ -51,6 +52,9 @@ public class Demo extends Activity {
 		}
 
 		public String getURL(String url) {
+			// PING
+			int m = Ping.pingHost(url);
+
 			int curl = curl_init();
 
 			if (0 == curl) {
@@ -135,6 +139,7 @@ public class Demo extends Activity {
 				data = curl_error();
 			} else {
 				data += "=====getinfo=====\n";
+				data += "Ping result: " + m + "\n";
 				data += "total_time: "
 						+ curl_getinfo(curl, CURLINFO_TOTAL_TIME) + "\n";
 				data += "namelookup_time: "
