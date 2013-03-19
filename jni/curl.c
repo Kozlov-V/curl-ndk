@@ -1,5 +1,5 @@
 /* vim: set sw=4 ts=4:
- * Author	: Fu Hu <askfuhu@gmail.com>
+ * Author   : Fu Hu <askfuhu@gmail.com>
  * Created  : Thu 26 Jul 2012 02:13:55 PM CST
  * Modified : Sun 05 Aug 2012 06:49:01 AM CST
  *
