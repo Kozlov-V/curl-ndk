@@ -11,7 +11,7 @@
  *
  */
 
-package me.cutemay.curl;
+package com.lovping.curl;
 
 public class Curl
 {

@@ -41,7 +41,7 @@
 #define LOGE(...) (__android_log_print(ANDROID_LOG_ERROR, TAG, __VA_ARGS__))
 #define LOGD(...) (__android_log_print(ANDROID_LOG_DEBUG, TAG, __VA_ARGS__))
 
-#define CLASSNAME "me/cutemay/curl/Curl"
+#define CLASSNAME "com/lovping/curl/Curl"
 #define ARRAY_SIZE(x) (sizeof(x) / sizeof(x[0]))
 
 static CURLcode code;
