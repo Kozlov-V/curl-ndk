@@ -34,7 +34,7 @@ public class Demo extends Activity {
 
 		try {
 			Data data = new Data();
-			data.getURL("http://cutemay.me/curl.html");
+			data.getURL("http://lovping.com/curl.html");
 			textView.setText(data.getData());
 		} catch (UnsatisfiedLinkError e) {
 			textView.setText("UnsatisfiedLinkError");
