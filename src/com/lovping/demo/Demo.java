@@ -22,6 +22,8 @@ import com.lovping.curl.Ping;
 
 import java.util.ArrayList;
 
+import me.lovping.demo.R;
+
 public class Demo extends Activity {
 
 	/** Called when the activity is first created. */
@@ -34,7 +36,7 @@ public class Demo extends Activity {
 
 		try {
 			Data data = new Data();
-			data.getURL("http://lovping.com/curl.html");
+			data.getURL("http://ya.ru");
 			textView.setText(data.getData());
 		} catch (UnsatisfiedLinkError e) {
 			textView.setText("UnsatisfiedLinkError");
